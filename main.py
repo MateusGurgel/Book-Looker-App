@@ -1,9 +1,12 @@
+import logging
 from typing import List
 from services.books_service import BookService
 from models.book_log import BookLog
 import streamlit as st
 from services.book_log_service import BookLogService
 import pandas as pd
+
+logging.basicConfig(level=logging.INFO)
 
 def print_book_logs(book_id: int, book_name: int) -> None:
     logs: List[BookLog] = BookLogService.get_book_logs_by_id(book_id)

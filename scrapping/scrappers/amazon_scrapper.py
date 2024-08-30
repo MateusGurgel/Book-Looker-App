@@ -1,8 +1,10 @@
+from models.book import Book
 from scrapping.scrappers.scrapper import Scrapper
 
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 
 class AmazonScrapper(Scrapper):
 
@@ -23,12 +25,22 @@ class AmazonScrapper(Scrapper):
     def stop(self) -> None:
         self.driver.quit()
 
-    def get_product_price_by_link(self, url: str) -> int:
+    def get_book_price_by_link(self, book: Book) -> int:
         driver = self.driver
 
-        driver.get(url)
 
-        price_element = driver.find_element(By.CLASS_NAME, "a-price-whole")
+        try:
+            driver.get(book.link)
+            price_element = driver.find_element(By.CLASS_NAME, "a-price-whole")
+        except NoSuchElementException as e:
+
+            html_source = driver.page_source
+            with open("./logs/" + book.name + "_log.html", "w", encoding="utf-8") as file:
+                file.write(html_source)
+
+            raise ValueError(f"Error getting price: {e}")
+            
+
         price = int(price_element.text)
 
         return price
