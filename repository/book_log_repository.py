@@ -15,6 +15,6 @@ class BookLogRepository():
             return book_logs
 
     @staticmethod
-    def create_book(price: int, date: date, book_id) -> None:
+    def create_book(price: int, date: date, book_id: int) -> None:
         with get_db_cursor() as cursor:
             cursor.execute("INSERT INTO book_logs (price, date, book_id) VALUES (%s, %s, %s)", (price, date, book_id))
