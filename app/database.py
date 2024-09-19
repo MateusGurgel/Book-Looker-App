@@ -1,6 +1,6 @@
 import psycopg2
 
-from decouple import config
+from decouple import config # type: ignore
 
 from contextlib import contextmanager
 

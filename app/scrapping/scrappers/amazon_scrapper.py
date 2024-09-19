@@ -1,46 +1,59 @@
+import requests
 from models.book import Book
 from scrapping.scrappers.scrapper import Scrapper
-
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
+from fake_headers import Headers # type: ignore    
+from bs4 import BeautifulSoup
+import os
 
 class AmazonScrapper(Scrapper):
 
-    def __init__(self) -> None:
-        self.driver = None
+    def __init__(self, proxy_connector: str) -> None:   
+        self.proxy_connector = proxy_connector
 
     def start(self) -> None:
-        options = Options()
-        options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--window-size=1920x1080')
-
-        driver = webdriver.Chrome(options=options)
-
-        self.driver = driver
+        pass
 
     def stop(self) -> None:
-        self.driver.quit()
+        pass
 
     def get_book_price_by_link(self, book: Book) -> int:
-        driver = self.driver
 
+        header = Headers( # type: ignore
+            os="win",
+            headers=True
+        ).generate()
 
+        proxies = {
+            'http': 'http://' + self.proxy_connector,
+            'https': 'http://' + self.proxy_connector,
+        }
+        
+        response = requests.get(book.link, headers=header, proxies=proxies, verify="./resources/brd/certificate.crt") # type: ignore
+        
         try:
-            driver.get(book.link)
-            price_element = driver.find_element(By.CLASS_NAME, "a-price-whole")
-        except NoSuchElementException as e:
+            response.raise_for_status()
+            
+            soup = BeautifulSoup(response.text, 'html.parser')
 
-            html_source = driver.page_source
+            price_span = soup.select_one('span.priceToPay')
+
+            if price_span is None:
+                raise ValueError("Price span not found")
+
+            price = price_span.select_one('span.a-price-whole')
+
+            if price is None:
+                raise ValueError("Price not found")
+            
+            price = price.text.replace(",", "")
+            return int(price)
+
+        except Exception as e:
+            html_source = response.text
+            
+            os.makedirs("./logs/", exist_ok=True)
+
             with open("./logs/" + book.name + "_log.html", "w", encoding="utf-8") as file:
                 file.write(html_source)
 
             raise ValueError(f"Error getting price: {e}")
-            
-
-        price = int(price_element.text)
-
-        return price

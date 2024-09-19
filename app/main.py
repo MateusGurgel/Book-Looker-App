@@ -10,6 +10,10 @@ logging.basicConfig(level=logging.INFO)
 
 def print_book_logs(book_id: int, book_name: str) -> None:
     logs: List[BookLog] = BookLogService.get_book_logs_by_id(book_id)
+
+    if not logs:
+        st.markdown(f"Não há logs para o livro: {book_name}")
+        return
     
     log_dicts = [log.__dict__ for log in logs]
     logs_dataset = pd.DataFrame(log_dicts)
