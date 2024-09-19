@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  redis:
+      image: redis:latest
+      ports:
+        - "6379:6379"
+
+  book_looker:
+    build:
+      context: ./app
+    ports:
+      - "5123:5123"
+    depends_on:
+      - database
+    env_file:
+      - .env
+
+  database:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+
+volumes:
+  redis_data:
