@@ -34,6 +34,12 @@ def log_books():
             
             date = datetime.today().date()
 
-            BookLogService.create_book_log(price, date, book.id)
+            try:
+                BookLogService.create_book_log(price, date, book.id)
+            except Exception as e:
+                logger.error(f"Error creating book log for book: {book.name}")
+                logger.error(e)
+                continue
+
 
     scrapper.stop()
