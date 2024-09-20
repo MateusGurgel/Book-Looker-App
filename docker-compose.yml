@@ -19,7 +19,7 @@ services:
   celery:
     build:
       context: ./app
-    command: celery -A app.celery worker --loglevel=info
+    command: celery -A setup worker --loglevel=info
     depends_on:
       - database
     env_file:
