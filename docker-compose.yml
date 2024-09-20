@@ -16,6 +16,15 @@ services:
     env_file:
       - .env
 
+  celery:
+    build:
+      context: ./app
+    command: celery -A app.celery worker --loglevel=info
+    depends_on:
+      - database
+    env_file:
+      - .env
+
   database:
     image: postgres:latest
     ports:
