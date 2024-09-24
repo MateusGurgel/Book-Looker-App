@@ -23,6 +23,7 @@ def print_book_logs(book_id: int, book_name: str) -> None:
     st.markdown(f"## Logs do livro: {book_name}")
     st.title("Preço x Tempo")
     st.line_chart(logs_dataset, y="price", x="date", x_label="Data", y_label="Preço (R$)")
+    st.download_button("Baixar logs", logs_dataset.to_csv(), "logs.csv")
 
 def main():
     st.title("Book Looker")
