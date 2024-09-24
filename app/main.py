@@ -8,6 +8,7 @@ import pandas as pd
 
 logging.basicConfig(level=logging.INFO)
 
+@st.cache_data(ttl=3600)
 def print_book_logs(book_id: int, book_name: str) -> None:
     logs: List[BookLog] = BookLogService.get_book_logs_by_id(book_id)
 
