@@ -8,8 +8,11 @@ class BookRepository():
     def get_all_books() -> List[Book]:
         with get_db_cursor() as cursor:
             cursor.execute("SELECT * FROM books")
-            books = cursor.fetchall()
-            books = [Book(*row) for row in books]
+            rows = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            book_dicts = [dict(zip(columns, row)) for row in rows]
+            books = [Book(**book_dict) for book_dict in book_dicts]
+
             return books
     
     @staticmethod

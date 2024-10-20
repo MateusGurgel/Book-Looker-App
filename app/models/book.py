@@ -1,5 +1,6 @@
-class Book:
-    def __init__(self, id: int, name: str, link: str):
-        self.id = id
-        self.name = name
-        self.link = link
+from pydantic import BaseModel
+
+class Book(BaseModel):
+    id: int
+    name: str
+    link: str

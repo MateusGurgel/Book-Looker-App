@@ -10,8 +10,11 @@ class BookLogRepository():
     def get_book_logs_by_id(book_id: int) -> List[BookLog]:
         with get_db_cursor() as cursor:
             cursor.execute("SELECT * FROM book_logs WHERE book_id = %s", (book_id,))
-            book_logs = cursor.fetchall()
-            book_logs = [BookLog(*row) for row in book_logs]
+
+            rows = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            log_dicts = [dict(zip(columns, row)) for row in rows]
+            book_logs = [BookLog(**log_dict) for log_dict in log_dicts]
             return book_logs
 
     @staticmethod
