@@ -73,4 +73,4 @@ class LibrarianService:
         if not match:
             raise HTTPException(status_code=500, detail="Try again later")
 
-        return match.group(1).strip()
+        return {"response": match.group(1).strip()}

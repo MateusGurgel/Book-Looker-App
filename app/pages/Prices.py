@@ -9,6 +9,13 @@ import requests
 
 logging.basicConfig(level=logging.INFO)
 
+st.set_page_config(
+    page_title="Book Looker",
+    page_icon="📚",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 API_LINK = "http://localhost:8000"
 
 @st.cache_data(ttl=3600)

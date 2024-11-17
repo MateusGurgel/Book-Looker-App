@@ -1,15 +1,10 @@
 import logging
-from typing import List
-from urllib import response
 from models.book import Book
-from models.book_log import BookLog
 import streamlit as st
-import pandas as pd
 import requests
+from env import API_LINK
 
 logging.basicConfig(level=logging.INFO)
-
-API_LINK = "http://localhost:8000"
 
 @st.cache_data(ttl=3600)
 def get_books():
@@ -33,7 +28,6 @@ def main():
         st.markdown(f"## {book.name}")
         st.markdown(f"**Link:** {book.link}")
         st.markdown(f"---")
-
 
 if __name__ == "__main__":
     main()
