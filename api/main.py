@@ -16,8 +16,11 @@ def read_root():
 class LibrarianQuestion(BaseModel):
     question: str
 
+class LibrarianResponse(BaseModel):
+    response: str
+
 @app.post("/librarian")
-def generate_response(question: LibrarianQuestion):
+def generate_response(question: LibrarianQuestion, response_model=LibrarianResponse):
     return LibrarianService.generate_response(question.question)
 
 @app.get("/books/{book_id}/logs")
