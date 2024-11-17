@@ -16,10 +16,13 @@ class LibrarianService:
         question = question.replace(">", " ")
 
         checkpoint = "HuggingFaceTB/SmolLM2-1.7B-Instruct"
-        tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 
-        device = "cpu"
-        model = AutoModelForCausalLM.from_pretrained(checkpoint).to(device)
+        try:
+            tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+            device = "cpu"
+            model = AutoModelForCausalLM.from_pretrained(checkpoint).to(device)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Failed to load the model, Try again later")
 
         books: List[Book] = BookService.get_all_books()
         context = [f"{book.name}, {book.link}" for book in books]
@@ -58,6 +61,7 @@ class LibrarianService:
             {"role": "system", "content": prompt},
             {"role": "user", "content": question}
         ]
+
         input_text = tokenizer.apply_chat_template(messages, tokenize=False)
         inputs = tokenizer.encode(input_text, return_tensors="pt").to(device)
         outputs = model.generate(inputs, max_new_tokens=200, temperature=0.2, top_p=0.9, do_sample=True)
