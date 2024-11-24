@@ -19,18 +19,32 @@ def get_librarian_response(prompt: str) -> str:
 
 def main():
     st.title("Bibliotecario")
-    with st.chat_message("Librarian"):
-        st.write("Olá! Você precisa de alguma recomendação de livros? Veio ao lugar certo! 👋")    
-    
-    prompt = st.chat_input("Diga algo!")
+
+    # Initialize chat history
+    if "messages" not in st.session_state:
+        st.session_state.messages = [
+            {
+                "role": "Librarian",
+                "content": "Olá! Você precisa de alguma recomendação de livros? Veio ao lugar certo! 👋"
+            }
+        ]
+
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    prompt = st.chat_input("O que você procura?")
 
     if prompt:
+        
         with st.chat_message("You"):
             st.write(prompt)
 
-        with st.chat_message("Librarian"):
-            with st.spinner('Carregando resposta...'):
-                st.write(get_librarian_response(prompt))
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        
+        with st.spinner("Esperando resposta do Bibliotecário..."):
+            st.session_state.messages.append({"role": "Librarian", "content": get_librarian_response(prompt)})
+            st.rerun()
 
 if __name__ == "__main__":
     main()
