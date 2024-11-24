@@ -27,3 +27,6 @@
 
 3. **Visualização de Dados**:  
    Criar dashboards e gráficos interativos que ajudem os usuários a visualizar tendências de preços ao longo do tempo e identificar os melhores momentos para comprar livros com desconto.
+
+4. **Recomendação com LLMS**:  
+   Criar um chat para realizar a recomendação de livros com base nas mensagens do usuário.
