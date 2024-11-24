@@ -1,25 +1,73 @@
-import logging
-from typing import List
-from urllib import response
-from models.book import Book
-from models.book_log import BookLog
 import streamlit as st
-import pandas as pd
-import requests
+from PIL import Image
 
-logging.basicConfig(level=logging.INFO)
-
+# Configuração da página
 st.set_page_config(
-    page_title="Book Looker",
-    page_icon="📚",
+    page_title="Book Looker - Recomendações e Análises de Preços de Livros",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
-def main():
-    st.title("Book Looker")
-    st.markdown("## Home em construção")
+st.title("📚 Book Looker")
+st.subheader("Encontre os melhores preços e receba recomendações personalizadas de livros!")
 
+# Introdução
+st.markdown(
+    """
+    Bem-vindo ao **Book Looker**! 
+    Aqui você pode:
+    - 📈 Comparar preços de livros.
+    - 📊 Ver análises detalhadas sobre preços.
+    - 🌟 Obter recomendações baseadas nos seus interesses.
+    """
+)
 
-if __name__ == "__main__":
-    main()
+# Barra lateral
+st.sidebar.title("🔍 Explore")
+st.sidebar.markdown(
+    """
+    - 🛒 [Comparar Preços](#comparar-preços)
+    - 🌟 [Recomendações](#recomendações)
+    - 📊 [Análises de Preços](#análises-de-preços)
+    """
+)
+st.sidebar.info("**Dica:** Use os filtros para encontrar as melhores ofertas!")
+
+# Seções principais
+st.header("📖 Comparar Preços")
+st.text("Veja preços atualizados de livros em lojas populares.")
+with st.expander("Detalhes"):
+    st.markdown(
+        """
+        Oferecemos:
+        - Preços diretamente da melhor loja de livros do brasil: a Amazon.
+        - Informações sobre descontos e promoções.
+        """
+    )
+
+st.header("🌟 Recomendações")
+st.text("Descubra livros baseados nas suas preferências.")
+with st.expander("Como funciona?"):
+    st.markdown(
+        """
+        - Converse com a nossa bilibotecaria!.
+        - Receba recomendações baseadas em tópicos e assuntos de suas preferencias
+        """
+    )
+
+st.header("📊 Análises de Preços")
+st.text("Visualize tendências de preços e avaliações de livros.")
+with st.expander("Gráficos e insights"):
+    st.markdown(
+        """
+        - Explore gráficos de preços históricos.
+        """
+    )
+# Rodapé
+st.markdown("---")
+st.markdown(
+    """
+    © 2024 **Book Looker**. Todos os direitos reservados.
+    - Desenvolvido com 💻 e ☕.
+    """
+)
