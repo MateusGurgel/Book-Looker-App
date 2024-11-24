@@ -14,6 +14,7 @@ def read_root():
     return BookService.get_all_books()
 
 class LibrarianQuestion(BaseModel):
+    past_interactions: str
     question: str
 
 class LibrarianResponse(BaseModel):
@@ -21,7 +22,7 @@ class LibrarianResponse(BaseModel):
 
 @app.post("/librarian")
 def generate_response(question: LibrarianQuestion) -> LibrarianResponse:
-    return {"response": LibrarianService.generate_response(question.question)}
+    return {"response": LibrarianService.generate_response(question.past_interactions, question.question)}
 
 @app.get("/books/{book_id}/logs")
 def read_item(book_id: int):

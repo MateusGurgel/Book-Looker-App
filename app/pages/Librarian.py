@@ -1,6 +1,4 @@
 import streamlit as st
-import numpy as np
-import time
 import requests
 from env import API_LINK
 
@@ -11,16 +9,29 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-def get_librarian_response(prompt: str) -> str:
+def get_librarian_response(past_interactions: str, prompt: str) -> str:
 
-    response = requests.post(API_LINK + "/librarian", json={"question": prompt})
+    response = requests.post(API_LINK + "/librarian", json={
+
+        "past_interactions": str(past_interactions),
+        "question": prompt
+    })
 
     return response.json()["response"]
 
 def main():
     st.title("Bibliotecario")
 
-    # Initialize chat history
+    def format_prompt(past_messages: str, messages: str) -> str:
+        message_prompt = f"""
+        past interations:
+        {past_messages}
+
+        user question: 
+        {messages}
+        """
+        return message_prompt
+
     if "messages" not in st.session_state:
         st.session_state.messages = [
             {
@@ -43,7 +54,9 @@ def main():
         st.session_state.messages.append({"role": "user", "content": prompt})
         
         with st.spinner("Esperando resposta do Bibliotecário..."):
-            st.session_state.messages.append({"role": "Librarian", "content": get_librarian_response(prompt)})
+
+            bot_response = get_librarian_response( st.session_state.messages, prompt)
+            st.session_state.messages.append({"role": "Librarian", "content": bot_response})
             st.rerun()
 
 if __name__ == "__main__":
