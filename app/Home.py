@@ -22,16 +22,7 @@ st.markdown(
     """
 )
 
-# Barra lateral
-st.sidebar.title("🔍 Explore")
-st.sidebar.markdown(
-    """
-    - 🛒 [Comparar Preços](#comparar-preços)
-    - 🌟 [Recomendações](#recomendações)
-    - 📊 [Análises de Preços](#análises-de-preços)
-    """
-)
-st.sidebar.info("**Dica:** Use os filtros para encontrar as melhores ofertas!")
+st.sidebar.info("**Dica:** Converse com a nossa nova bibliotecária!")
 
 # Seções principais
 st.header("📖 Comparar Preços")
