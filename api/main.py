@@ -20,8 +20,8 @@ class LibrarianResponse(BaseModel):
     response: str
 
 @app.post("/librarian")
-def generate_response(question: LibrarianQuestion, response_model=LibrarianResponse):
-    return LibrarianService.generate_response(question.question)
+def generate_response(question: LibrarianQuestion) -> LibrarianResponse:
+    return {"response": LibrarianService.generate_response(question.question)}
 
 @app.get("/books/{book_id}/logs")
 def read_item(book_id: int):
