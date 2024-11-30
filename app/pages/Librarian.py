@@ -1,6 +1,9 @@
 import streamlit as st
 import requests
 from env import API_LINK
+import re
+
+from components.book_log_ui import print_book_logs
 
 st.set_page_config(
     page_title="Book Looker",
@@ -42,7 +45,18 @@ def main():
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
+
+            regex = r"<showLogs>(\d+)</showLogs>"
+            match = re.search(regex, message["content"])
+            if match:
+                book_id = match.group(1)
+                message["content"] = message["content"].replace(match.group(0), "")
+                st.markdown(message["content"])
+                print_book_logs(book_id)
+                continue
+
             st.markdown(message["content"])
+
 
     prompt = st.chat_input("O que você procura?")
 
@@ -56,6 +70,7 @@ def main():
         with st.spinner("Esperando resposta do Bibliotecário..."):
 
             bot_response = get_librarian_response( st.session_state.messages, prompt)
+
             st.session_state.messages.append({"role": "Librarian", "content": bot_response})
             st.rerun()
 
