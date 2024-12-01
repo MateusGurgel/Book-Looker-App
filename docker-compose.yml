@@ -8,6 +8,14 @@ services:
       - "8000:8000"
     env_file:
       - .env
+  
+  book_looker_app:
+    build:
+      context: ./app
+    ports:
+      - "5123:5123"
+    env_file:
+      - .env
 
   celery:
     build:
