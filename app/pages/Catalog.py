@@ -3,6 +3,7 @@ from models.book import Book
 from components.book_log_ui import print_book_logs
 import streamlit as st
 import requests
+from env import API_LINK
 
 logging.basicConfig(level=logging.INFO)
 
@@ -12,8 +13,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
-API_LINK = "http://localhost:8000"
 
 @st.cache_data(ttl=3600)
 def get_books():
