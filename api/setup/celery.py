@@ -17,7 +17,7 @@ celery_app.conf.broker_connection_retry_on_startup = True
 celery_app.conf.beat_schedule = {
     'Get Book Data': {
         'task': 'setup.celery.collect_data',
-        'schedule': crontab(hour="7", minute="30"),
+        'schedule': crontab(hour="12", minute="0"),
     },
 }
 
