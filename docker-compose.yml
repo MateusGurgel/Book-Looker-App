@@ -27,6 +27,6 @@ services:
   celery_beat:
     build:
       context: ./api
-    command: celery -A setup beat --loglevel=info
+    command: celery -A setup beat -l info
     env_file:
       - .env
