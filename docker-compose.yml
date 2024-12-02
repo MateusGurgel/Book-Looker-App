@@ -23,3 +23,10 @@ services:
     command: celery -A setup worker --loglevel=info
     env_file:
       - .env
+
+  celery_beat:
+    build:
+      context: ./api
+    command: celery -A setup beat --loglevel=info
+    env_file:
+      - .env
