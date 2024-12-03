@@ -1,4 +1,8 @@
-import requests
+import ssl
+import urllib.request
+import gzip
+import io
+
 from models.book import Book
 from scrapping.scrappers.scrapper import Scrapper
 from fake_headers import Headers # type: ignore    
@@ -27,13 +31,32 @@ class AmazonScrapper(Scrapper):
             'http': 'http://' + self.proxy_connector,
             'https': 'http://' + self.proxy_connector,
         }
-        
-        response = requests.get(book.link, headers=header, proxies=proxies, verify="./resources/brd/certificate.crt") # type: ignore
-        
+
+
+        ca_cert_path = './resources/brd/certificate.crt'
+        context = ssl.create_default_context(cafile=ca_cert_path)
+
+        opener = urllib.request.build_opener(
+            urllib.request.ProxyHandler(proxies),
+            urllib.request.HTTPSHandler(context=context),
+
+        )
+
+        request = urllib.request.Request(book.link, headers=header)
+
+        response = opener.open(request)
+
+        content_type = response.headers.get('Content-Encoding', '').lower()
+
+        if 'gzip' in content_type:
+            buf = io.BytesIO(response.read())
+            f = gzip.GzipFile(fileobj=buf)
+            response_text = f.read().decode('utf-8')
+        else:
+            response_text = response.read().decode('utf-8')
+
         try:
-            response.raise_for_status()
-            
-            soup = BeautifulSoup(response.text, 'html.parser')
+            soup = BeautifulSoup(response_text, 'html.parser')
 
             price_span = soup.select_one('span.priceToPay')
 
@@ -49,7 +72,7 @@ class AmazonScrapper(Scrapper):
             return int(price)
 
         except Exception as e:
-            html_source = response.text
+            html_source = response_text
             
             os.makedirs("./logs/", exist_ok=True)
 
